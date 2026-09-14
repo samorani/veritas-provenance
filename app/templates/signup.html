@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Sign up · Veritas Provenance{% endblock %}
+{% block content %}
+<form class="auth" method="post" action="{{ url_for('signup') }}">
+  <h1>Sign up</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" value="{{ email or '' }}" autocomplete="username" required autofocus>
+  <label for="password">Password <span class="muted">(at least 8 characters)</span></label>
+  <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+  <label for="confirm_password">Confirm password</label>
+  <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" minlength="8" required>
+  {# TEMPORARY: invite code field; remove together with the check in app.py signup_error(). #}
+  <label for="invite_code">Invite code</label>
+  <input id="invite_code" name="invite_code" type="password" autocomplete="off" required>
+  <button type="submit">Create account</button>
+  <p class="muted">Have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+</form>
+{% endblock %}

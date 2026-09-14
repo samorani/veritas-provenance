@@ -1,0 +1,11 @@
+.env
+.git/
+venv/
+data/
+schema/
+__pycache__/
+*.pyc
+*.csv
+.claude/
+load_*.py
+profile_*.py

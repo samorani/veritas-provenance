@@ -1,0 +1,20 @@
+{% set c = coverage %}
+<footer class="coverage">
+  <h2>Coverage</h2>
+  <p><strong>Searched:</strong></p>
+  <ul>
+    <li>ERR Jeu de Paume database (<code>err_raw</code>): {{ "{:,}".format(c.err_rows) }} objects, loaded {{ c.err_loaded }}.</li>
+    {% if c.getty_parsed %}
+    <li>Getty Provenance Index Sales Catalogs (<code>sales_contents</code>): {{ "{:,}".format(c.getty_rows) }} lots from files {{ c.getty_files }}, loaded {{ c.getty_loaded }}{% if c.getty_filter %}, limited to {{ c.getty_filter }}{% endif %}.
+      {% if c.getty_in_progress %}<span class="note">Partly loaded: {{ c.getty_in_progress | join(", ") }}.</span>{% endif %}
+      {% if c.getty_comment_rows != c.getty_rows %}<span class="note">The table comment lists {{ "{:,}".format(c.getty_comment_rows) }} rows but the table holds {{ "{:,}".format(c.getty_rows) }}.</span>{% endif %}
+    </li>
+    {% else %}
+    <li>Getty Provenance Index Sales Catalogs (<code>sales_contents</code>): {{ "{:,}".format(c.getty_rows) }} lots.
+      <span class="note">Load details unavailable: the table comment is missing or unreadable.</span></li>
+    {% endif %}
+  </ul>
+  <p>Surname search cannot find {{ "{:,}".format(c.err_unsearchable) }} ERR objects and {{ "{:,}".format(c.getty_unsearchable) }} Getty lots
+    whose artist field gives no usable surname (empty; dates or descriptors only; Getty "NEW" or bracketed placeholders such as "[ANONYMOUS]").</p>
+  <p><strong>Not searched:</strong> {{ c.not_searched | join("; ") }}.</p>
+</footer>

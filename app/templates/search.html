@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{% if q %}{{ q }} · {% endif %}Search · Veritas Provenance{% endblock %}
+
+{% macro summary(p, unit, limit) %}
+  {% if p.key is none %}
+    <p class="note">Nothing searched on this side: the input gives no usable surname ({{ p.reason }}).</p>
+  {% else %}
+    <p><strong>{{ "{:,}".format(p.total) }}</strong> {{ unit }}{{ "" if p.total == 1 else "s" }}
+      <span class="muted">· surname key <code>{{ p.key }}</code> · {{ p.names }} distinct artist value{{ "" if p.names == 1 else "s" }}</span></p>
+    {% if p.total > limit %}
+      <p class="note">Showing the first {{ limit }} of {{ "{:,}".format(p.total) }}.</p>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+<form method="get" action="{{ url_for('search') }}">
+  <label for="q">Artist surname</label>
+  <div class="search-row">
+    <input id="q" name="q" type="search" value="{{ q }}" placeholder="e.g. Renoir" autofocus>
+    <button type="submit">Search</button>
+  </div>
+</form>
+
+{% if q %}
+<div class="panels">
+  <section class="panel">
+    <h2>ERR · Jeu de Paume</h2>
+    {{ summary(err, "object", limit) }}
+    {% if err.rows %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Artist</th><th>Title</th><th>Medium</th><th>Measurements</th><th>Owner</th>
+          <th>Collection</th><th>Intake date</th><th>Restituted</th><th>Munich no.</th>
+        </tr></thead>
+        <tbody>
+        {% for r in err.rows %}
+          <tr>
+            <td>{{ r.artist }}</td><td>{{ r.title }}</td><td>{{ r.medium }}</td><td>{{ r.measurements }}</td>
+            <td>{{ r.owner }}</td><td>{{ r.collection }}</td><td class="num">{{ r.intake_date }}</td>
+            <td>{{ r.restituted }}</td><td class="num">{{ r.munich_no }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Getty · German Sales 1900–1945</h2>
+    {{ summary(getty, "lot", limit) }}
+    {% if getty.rows %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Artist authority</th><th>Title</th><th>Lot</th><th>Auction house</th><th>Sale year</th>
+          <th>Catalog</th><th>Price</th><th>Catalog scan</th>
+        </tr></thead>
+        <tbody>
+        {% for r in getty.rows %}
+          <tr>
+            <td>{{ r.art_authority_1 }}</td><td>{{ r.title }}</td><td class="num">{{ r.lot_number }}</td>
+            <td>{{ r.auction_house_1 }}</td><td class="num">{{ r.lot_sale_year }}</td><td class="num">{{ r.catalog_number }}</td>
+            <td class="num">{{ r.price_amount_1 }}{% if r.price_amount_1 and r.price_currency_1 %} {% endif %}{{ r.price_currency_1 }}</td>
+            <td>{% if r.heidelberg_link and r.heidelberg_link.startswith(("http://", "https://")) %}<a href="{{ r.heidelberg_link }}" target="_blank" rel="noopener noreferrer">Heidelberg</a>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endif %}
+
+{% include "_coverage.html" %}
+{% endblock %}

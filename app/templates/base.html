@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Veritas Provenance{% endblock %}</title>
+<style>
+  :root { --ink: #1d1d1f; --muted: #5f6368; --line: #dcdcd7; --bg: #f7f7f4; --panel: #ffffff; --accent: #2f5d8a; --warn: #8a5a00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  header a.brand { font-weight: 600; color: var(--ink); text-decoration: none; }
+  main { padding: 24px; max-width: 1680px; margin: 0 auto; }
+  a { color: var(--accent); }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  form.auth { max-width: 380px; margin: 48px auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 24px; }
+  label { display: block; margin: 12px 0 4px; font-weight: 500; }
+  input[type=email], input[type=password], input[type=search], input[type=text] { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: #fff; }
+  button { margin-top: 16px; padding: 8px 14px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; cursor: pointer; }
+  button.link { background: none; color: var(--accent); padding: 0; margin: 0; }
+  .error { color: #a50e0e; background: #fdecea; padding: 8px 10px; border-radius: 6px; }
+  .muted { color: var(--muted); }
+  .note { color: var(--warn); }
+  .search-row { display: flex; gap: 8px; max-width: 560px; }
+  .search-row button { margin-top: 0; }
+  .panels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; margin-top: 20px; }
+  @media (max-width: 1100px) { .panels { grid-template-columns: minmax(0, 1fr); } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  .panel h2 { margin: 0 0 4px; font-size: 17px; }
+  .panel p { margin: 4px 0; }
+  .table-wrap { overflow: auto; max-height: 70vh; margin-top: 10px; border: 1px solid var(--line); border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { background: #f1f1ed; position: sticky; top: 0; white-space: nowrap; }
+  td.num { white-space: nowrap; }
+  footer.coverage { margin-top: 28px; padding: 16px 0 0; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  footer.coverage h2 { font-size: 14px; color: var(--ink); margin: 0 0 6px; }
+  footer.coverage ul { margin: 4px 0 10px; padding-left: 18px; }
+  footer.coverage strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="{{ url_for('search') }}">Veritas Provenance</a>
+  {% if session.get('user_id') %}
+  <form method="post" action="{{ url_for('logout') }}"><button class="link" type="submit">Log out</button></form>
+  {% endif %}
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>
